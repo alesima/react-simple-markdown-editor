@@ -1,0 +1,13 @@
+.toolbar-button {
+  padding: 0.25rem 0.5rem;
+  background-color: white;
+  border-radius: 0.25rem;
+}
+
+.toolbar-button:hover {
+  background-color: #e5e7eb;
+}
+
+.toolbar-button:focus {
+  outline: none;
+}

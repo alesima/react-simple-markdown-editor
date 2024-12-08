@@ -3,12 +3,21 @@ import Toolbar from "./components/Toolbar/Toolbar";
 import Editor from "./components/Editor";
 import Preview from "./components/Preview";
 import { insertMarkdown } from "./utils/markdownUtils";
+import {
+  createToolbarButtons,
+  defaultConfig,
+  MarkdownEditorConfig,
+  ToolbarButtonConfig,
+  toolbarPresets,
+} from "./config";
+import "./MarkdownEditor.css";
 
 interface MarkdownEditorProps {
   value: string;
   onChange: (value: string) => void;
   rows?: number;
   previewMode?: boolean;
+  config?: MarkdownEditorConfig;
 }
 
 const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
@@ -16,6 +25,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   onChange,
   rows = 10,
   previewMode = false,
+  config = defaultConfig,
 }) => {
   const [isPreview, setIsPreview] = useState(previewMode);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -35,163 +45,21 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     setSelectionEnd(newSelectionEnd);
   };
 
-  const toolbarButtons = [
-    // Text Formatting
-    {
-      icon: "B",
-      action: () => handleInsertMarkdown("**", "**"),
-      title: "Bold",
-    },
-    {
-      icon: "I",
-      action: () => handleInsertMarkdown("*", "*"),
-      title: "Italic",
-    },
-    {
-      icon: "S",
-      action: () => handleInsertMarkdown("~~", "~~"),
-      title: "Strikethrough",
-    },
-    {
-      icon: "U",
-      action: () => handleInsertMarkdown("<u>", "</u>"),
-      title: "Underline",
-    },
+  const defaultButtons = createToolbarButtons(handleInsertMarkdown);
 
-    // Headings
-    {
-      icon: "H1",
-      action: () => handleInsertMarkdown("# "),
-      title: "Heading 1",
-    },
-    {
-      icon: "H2",
-      action: () => handleInsertMarkdown("## "),
-      title: "Heading 2",
-    },
-    {
-      icon: "H3",
-      action: () => handleInsertMarkdown("### "),
-      title: "Heading 3",
-    },
-    {
-      icon: "H4",
-      action: () => handleInsertMarkdown("#### "),
-      title: "Heading 4",
-    },
-    {
-      icon: "H5",
-      action: () => handleInsertMarkdown("##### "),
-      title: "Heading 5",
-    },
-    {
-      icon: "H6",
-      action: () => handleInsertMarkdown("###### "),
-      title: "Heading 6",
-    },
+  const toolbarConfig = config.toolbarConfig || "default";
 
-    // Lists
-    {
-      icon: "•",
-      action: () => handleInsertMarkdown("- "),
-      title: "Bullet List",
-    },
-    {
-      icon: "1.",
-      action: () => handleInsertMarkdown("1. "),
-      title: "Numbered List",
-    },
-    {
-      icon: "☐",
-      action: () => handleInsertMarkdown("- [ ] "),
-      title: "Task List",
-    },
+  const selectedTitles =
+    toolbarConfig === "custom"
+      ? config.customToolbarButtons || []
+      : toolbarPresets[toolbarConfig];
 
-    // Quotes and Separators
-    {
-      icon: ">",
-      action: () => handleInsertMarkdown("> "),
-      title: "Blockquote",
-    },
-    {
-      icon: "—",
-      action: () => handleInsertMarkdown("\n---\n"),
-      title: "Horizontal Rule",
-    },
-
-    // Links and Media
-    {
-      icon: "🔗",
-      action: () => handleInsertMarkdown("[", "](url)"),
-      title: "Link",
-    },
-    {
-      icon: "🖼",
-      action: () => handleInsertMarkdown("![alt text](", ")"),
-      title: "Image",
-    },
-
-    // Tables
-    {
-      icon: "📊",
-      action: () =>
-        handleInsertMarkdown(
-          `
-  | Column 1 | Column 2 | Column 3 |
-  | -------- | -------- | -------- |
-  | Row 1    | Cell 2   | Cell 3   |
-  | Row 2    | Cell 5   | Cell 6   |
-          `.trim()
-        ),
-      title: "Table",
-    },
-
-    // Code and Diagrams
-    {
-      icon: "`",
-      action: () => handleInsertMarkdown("`", "`"),
-      title: "Inline Code",
-    },
-    {
-      icon: "```",
-      action: () => handleInsertMarkdown("```\n", "\n```"),
-      title: "Code Block",
-    },
-    {
-      icon: "Mermaid",
-      action: () => handleInsertMarkdown("```mermaid\n", "\n```"),
-      title: "Mermaid Diagram",
-    },
-
-    // Advanced Features
-    {
-      icon: "Sup",
-      action: () => handleInsertMarkdown("<sup>", "</sup>"),
-      title: "Superscript",
-    },
-    {
-      icon: "Sub",
-      action: () => handleInsertMarkdown("<sub>", "</sub>"),
-      title: "Subscript",
-    },
-    {
-      icon: "Center",
-      action: () => handleInsertMarkdown("<center>", "</center>"),
-      title: "Center Align",
-    },
-    {
-      icon: "HTML",
-      action: () => handleInsertMarkdown("<div>\n", "\n</div>"),
-      title: "HTML Block",
-    },
-  ];
+  const toolbarButtons: ToolbarButtonConfig[] = selectedTitles
+    .map(title => defaultButtons.find(btn => btn.title === title))
+    .filter((btn): btn is ToolbarButtonConfig => Boolean(btn));
 
   return (
-    <div
-      className={`markdown-editor ${
-        isFullscreen ? "fixed inset-0 z-50 bg-white" : ""
-      }`}
-    >
+    <div className={`markdown-editor ${isFullscreen ? "fixed" : ""}`}>
       <Toolbar
         buttons={toolbarButtons}
         onTogglePreview={() => setIsPreview(!isPreview)}

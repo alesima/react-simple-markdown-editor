@@ -1,6 +1,10 @@
-.markdown-editor {
-  /* Base styles for the editor */
-}
+:root {
+  --toolbar-bg: var(--toolbar-bg, #f3f4f6);
+  --toolbar-btn-bg: var(--toolbar-btn-bg, white);
+  --toolbar-btn-hover-bg: var(--toolbar-btn-hover-bg, #e5e7eb);
+  --editor-bg: var(--editor-bg, white);
+  --preview-bg: var(--preview-bg, #f8f8f8);
+} /* General styles */
 
 .markdown-editor.fixed {
   position: fixed;
@@ -9,5 +13,25 @@
   right: 0;
   bottom: 0;
   z-index: 50;
-  background-color: white; /* bg-white */
+  background-color: var(--editor-bg);
+}
+
+.toolbar {
+  background-color: var(--toolbar-bg);
+}
+
+.toolbar-button {
+  background-color: var(--toolbar-btn-bg);
+}
+
+.toolbar-button:hover {
+  background-color: var(--toolbar-btn-hover-bg);
+}
+
+.editor {
+  background-color: var(--editor-bg);
+}
+
+.preview {
+  background-color: var(--preview-bg);
 }

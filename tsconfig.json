@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6", // Target modern JavaScript
+    "target": "ES2016", // Target modern JavaScript
     "module": "ESNext", // Use ESNext for compatibility with modern modules
     "outDir": "./dist", // Output directory for compiled files
     "declaration": true, // Generate type declaration files

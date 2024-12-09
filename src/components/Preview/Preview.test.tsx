@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Preview from "./Preview";
+import Preview from "../Preview";
 
 // Mock Mermaid component
 jest.mock("mdx-mermaid/lib/Mermaid", () => ({
